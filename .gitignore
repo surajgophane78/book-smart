@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Storage (books, audio, database — sab runtime pe banta hai)
+storage/books/*
+storage/audio/*
+storage/pages/*
+storage/*.db
+!storage/books/.gitkeep
+!storage/audio/.gitkeep
+!storage/pages/.gitkeep
+
+# VS Code
+.vscode/
+.idea/
+
+# Runtime launcher files
+.booksmart.pids
+app.log
+llm.log

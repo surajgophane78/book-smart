@@ -1,0 +1,9 @@
+# BookSmart dependencies — pip install -r requirements.txt
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+pymupdf>=1.24          # PDF reading
+openai>=1.30           # local LLM (llamafile/Ollama/LM Studio) ka client
+edge-tts>=6.1          # free TTS (Hindi + English voices)
+numpy>=1.26            # brainwave audio generation
+requests>=2.31         # Gutenberg book search/download

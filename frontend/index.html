@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookSmart — Read, Listen, Take Notes</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      <span>Book<em>Smart</em></span>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-btn active" data-view="library">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span>Library</span>
+      </button>
+      <button class="nav-btn" data-view="brain">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+        <span>Brain Frequencies</span>
+      </button>
+      <button class="nav-btn" data-view="settings">
+        <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <div class="llm-status" id="llm-status">
+      <span class="dot" id="llm-dot"></span>
+      <div>
+        <small>Local AI</small>
+        <strong id="llm-name">Checking…</strong>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- ---------- LIBRARY VIEW ---------- -->
+    <section id="view-library" class="view">
+      <header class="view-head">
+        <div>
+          <h1>My Library 📚</h1>
+          <p class="subtitle">Read your books, listen to them, and build notes with local AI</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn ghost" id="btn-show-search">🌐 Download Free Books</button>
+          <button class="btn primary" id="btn-upload">＋ Add Book (PDF/TXT)</button>
+          <input type="file" id="file-input" accept=".pdf,.txt" hidden>
+        </div>
+      </header>
+
+      <!-- store panel (hidden initially) -->
+      <div id="store-panel" class="store-panel" hidden>
+        <div class="spotlight">
+          <input type="text" id="gutenberg-search" placeholder="Search any free book… (e.g. 'sherlock holmes', 'pride and prejudice', 'alice in wonderland')" />
+          <button class="btn primary sm" id="btn-gutenberg-go">Search</button>
+        </div>
+        <div id="gutenberg-results" class="gutenberg-results"></div>
+      </div>
+
+      <div id="books-grid" class="books-grid"></div>
+      <div id="empty-state" class="empty-state" hidden>
+        <p>🗃️</p>
+        <h3>No books yet</h3>
+        <p>Upload a PDF with <strong>Add Book</strong>, or grab any of the 70,000+ free books with <strong>Download Free Books</strong>.</p>
+      </div>
+    </section>
+
+    <!-- ---------- READER VIEW ---------- -->
+    <section id="view-reader" class="view" hidden>
+      <header class="reader-topbar">
+        <button class="icon-btn" id="btn-back" title="Back to Library">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        </button>
+        <div class="reader-meta">
+          <strong id="reader-title">—</strong>
+          <span id="reader-pageinfo">page 1 / 1</span>
+        </div>
+        <div class="reader-tools">
+          <div class="font-tools">
+            <button class="icon-btn" id="font-down" title="Smaller text">A−</button>
+            <button class="icon-btn" id="font-up" title="Bigger text">A+</button>
+          </div>
+          <button class="icon-btn" id="btn-tts" title="Listen to this page (TTS)">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="reader-body">
+        <article class="page-area">
+          <div id="page-content" class="page-content">…</div>
+          <div class="page-nav">
+            <button class="btn ghost sm" id="page-prev">← Prev</button>
+            <span id="page-counter">1 / 1</span>
+            <button class="btn ghost sm" id="page-next">Next →</button>
+          </div>
+        </article>
+
+        <aside class="reader-panel">
+          <div class="panel-tabs">
+            <button class="tab active" data-tab="chat">🤖 AI</button>
+            <button class="tab" data-tab="notes">📝 Notes</button>
+            <button class="tab" data-tab="words">🔤 Words</button>
+          </div>
+
+          <!-- AI tab -->
+          <div class="tab-pane active" id="tab-chat">
+            <p class="hint">Ask anything about this book — answers come only from its pages.
+            (Thinking model: answers can take 30s–3min, that's normal.)</p>
+            <div id="chat-log" class="chat-log"></div>
+            <div class="chat-input">
+              <input type="text" id="chat-input" placeholder="e.g. What is the main message of this book?" />
+              <button class="btn primary sm" id="chat-send">Ask</button>
+            </div>
+            <button class="btn ghost sm full" id="chat-summarize">✍️ Summarize this page</button>
+            <button class="btn ghost sm full" id="chat-makenotes">📒 Make notes from this page</button>
+          </div>
+
+          <!-- Notes tab -->
+          <div class="tab-pane" id="tab-notes">
+            <div class="note-editor">
+              <input type="text" id="note-title" placeholder="Note title…" value="Page note" />
+              <textarea id="note-content" rows="4" placeholder="Write your note here…"></textarea>
+              <button class="btn primary sm full" id="note-save">💾 Save Note</button>
+            </div>
+            <div id="notes-list" class="notes-list"></div>
+          </div>
+
+          <!-- Words tab -->
+          <div class="tab-pane" id="tab-words">
+            <p class="hint">Pull out the hard words of this page with AI — simple meanings included, and 🔊 to hear pronunciation.</p>
+            <button class="btn primary sm full" id="btn-hardwords">🔍 Find hard words</button>
+            <div id="words-list" class="words-list"></div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- bottom player: TTS only (brain frequencies live in their own section) -->
+      <div class="player-bar" id="player-bar" hidden>
+        <button class="player-close" id="player-close">✕</button>
+        <span class="player-label" id="player-label">🎧 Audio</span>
+        <audio id="player-audio" controls></audio>
+      </div>
+    </section>
+
+    <!-- ---------- BRAIN FREQUENCIES VIEW (completely separate) ---------- -->
+    <section id="view-brain" class="view" hidden>
+      <header class="view-head">
+        <div>
+          <h1>Brain Frequencies 🎧</h1>
+          <p class="subtitle">Binaural beats — focus while you read, refresh your mind after</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn ghost" id="brain-stop-all">⏹ Stop Audio</button>
+        </div>
+      </header>
+
+      <div id="brain-now" class="brain-now" hidden>
+        <span id="brain-now-label">🧠 Now playing</span>
+        <button class="btn ghost sm" id="brain-now-stop">⏹ Stop</button>
+      </div>
+
+      <div id="brain-grid" class="brain-grid"></div>
+
+      <div class="brain-tip">
+        💡 <strong>Tip:</strong> Always use headphones — binaural beats only work when each ear hears a
+        different frequency. Try <em>Focus</em> or <em>Calm</em> while reading, and <em>Fresh Mind</em>
+        after you finish. The audio keeps playing even if you switch to another section.
+      </div>
+    </section>
+
+    <!-- ---------- SETTINGS VIEW ---------- -->
+    <section id="view-settings" class="view" hidden>
+      <header class="view-head">
+        <div>
+          <h1>Settings ⚙️</h1>
+          <p class="subtitle">Everything runs locally on your PC — no data ever leaves your machine</p>
+        </div>
+      </header>
+      <div class="cards">
+        <div class="card">
+          <h3>🤖 Local LLM</h3>
+          <p id="set-llm-status">Checking…</p>
+          <p class="dim">Works with llamafile / Ollama / LM Studio — anything exposing a <code>/v1</code> API.<br>
+          Change the URL in <code>backend/config.py</code> → <code>LLM_BASE_URL</code>.</p>
+          <button class="btn ghost sm" id="btn-llm-test">⚡ Test AI connection</button>
+          <p class="dim" id="set-llm-test"></p>
+        </div>
+        <div class="card">
+          <h3>🎧 Text-to-Speech</h3>
+          <p class="dim">Free Microsoft Edge neural voice: <code>en-US-Aria</code> (needs internet).<br>
+          🗣️ Single words: click any long word in the reader, then press 🔊.</p>
+        </div>
+        <div class="card">
+          <h3>📚 Book sources</h3>
+          <p class="dim">Upload: any PDF/TXT you own.<br>
+          Downloads: Project Gutenberg — 70,000+ copyright-free books.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- word explain popover -->
+  <div id="word-pop" class="word-pop" hidden>
+    <div class="wp-head">
+      <strong id="wp-word">word</strong>
+      <button class="icon-btn sm" id="wp-speak" title="Pronounce">🔊</button>
+      <button class="icon-btn sm" id="wp-close">✕</button>
+    </div>
+    <div id="wp-body" class="wp-body">AI meaning will appear here…</div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>
